@@ -17,7 +17,12 @@
 
     <modules>
         <module>core-agent</module>
+        <module>embabel-agent</module>
+        <module>java-agent</module>
+        <module>springai-agent</module>
         <module>web-app</module>
+        <module>evals-web-app</module>
+        <module>favourites-mcp</module>
     </modules>
 
     <properties>
