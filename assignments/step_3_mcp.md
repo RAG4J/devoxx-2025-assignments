@@ -1,11 +1,13 @@
 # Add an MCP server to manage favorite talks
 In this assignment, you will add a new feature to the TalksAgent. You'll add an MCP server to manage the favorite talks of the users. The MCP server is already implemented for you in the favourites-mcp module. You only need configure the MCP client.
 
+This projects builts on the previous assignment. Make sure you have completed the previous assignment before starting this one. Switch back to the spring profile springai before continuing.
+
 ```text
 > The MCP server is in the favourites-mcp module. First, you need to build the module.
 - From the root of the project, run `mvn clean install -DskipTests -pl favourites-mcp`
 > Next you can test the MCP server with the MCP inspector. (Optional)
-- You can skip this step if you do not have npx installed or don't want to install the inepctor.
+- You can skip this step if you do not have npx installed or don't want to install the inspector.
 - In the file src/test/resources/mcp-servers-config.json, check the configuration and change the absolute path to the jar.
 - From the root of the project, run:
 npx @modelcontextprotocol/inspector --cli \
@@ -81,7 +83,7 @@ The output of the npx command should be something like this:
 You can also run the GUI version of the inspector and try out the tools. (Optional)
 
 ```text
-> From the root of the favourites-mcp/project, run:
+> From the root of the favourites-mcp project, run:
 npx @modelcontextprotocol/inspector \
   --config ./src/test/resources/mcp-servers-config.json \
   --server location
@@ -117,7 +119,7 @@ spring:
               args:
                 - -Dspring.ai.mcp.server.stdio=true
                 - -jar
-                - "${FAVOURITES_MCP_JAR:${user.dir}/favourites-mcp/target/favourites-mcp-1.0.0-SNAPSHOT.jar}"
+                - "${FAVOURITES_MCP_JAR:${user.dir}/favourites-mcp/target/favourites-mcp-0.0.1-SNAPSHOT.jar}"
 ```
 
 MCP provided tools can be used by an Agent through the registration of a ToolCallbackProvider. The `SyncMcpToolCallbackProvider` that needs a list of `McpSyncClients`. These clients can be injected by Spring.
@@ -159,7 +161,7 @@ The remote MCP server is in the favourites-mcp-remote module. You need to make t
 mvn spring-boot:run
 > Open the browser and go to http://localhost:8081. You should see a welcome page.
 > Add a few favourites for multiple users. Go back to the list and check if the favourites are added correctly.
-- Not that you can filter the favourites by user, but in the web client you can also list all favourites. This is not possible through the MCP tool.
+- Note that you can filter the favourites by user, but in the web client you can also list all favourites. This is not possible through the MCP tool.
 ``` 
 
 If you have the MCP inspector installed, you can also test the remote MCP server with the MCP inspector. (Optional)
