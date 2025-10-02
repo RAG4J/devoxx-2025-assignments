@@ -16,6 +16,7 @@
     <description>Parent POM for workshop agent multimodule project</description>
 
     <modules>
+        <module>auth-server</module>
         <module>core-agent</module>
         <module>embabel-agent</module>
         <module>java-agent</module>
@@ -23,6 +24,7 @@
         <module>web-app</module>
         <module>evals-web-app</module>
         <module>favourites-mcp</module>
+        <module>favourites-mcp-remote</module>
     </modules>
 
     <properties>
