@@ -30,7 +30,7 @@ class ActionAgentTest {
     @BeforeEach
     void setUp() {
         chatClient = mock(ChatClient.class);
-        actionAgent = new ActionAgent(chatClient) {
+        actionAgent = new ActionAgent(chatClient, chatMemory) {
             @Override
             protected Conversation doInvoke(String userId, Conversation.Message userMessage) {
                 return new Conversation(Collections.singletonList(userMessage));
