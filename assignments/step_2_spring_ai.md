@@ -45,8 +45,8 @@ For the web-app to work with the different agent implementations, we have a wrap
 
 ```
 > Create a Bean of type ChatMemory in the configuration class SpringAIAgentConfig. A good implementation to start with is MessageWindowChatMemory.
-> In the ActionAgent class, add a constructor parameter for ChatMemory and store it in a field.
-> In the method doInvoke, add the MessageChatMemoryAdvisor to the advisors of the chatClient.
+> In the ActionAgent class, add a constructor parameter for ChatMemory and store it in a protected field.
+> In the method doInvoke of the TalksAgent, add the MessageChatMemoryAdvisor to the advisors of the chatClient.
 - The fluent interface of the chatClient has a method `advisors` to add the advisors.
 - The MessageChatMemoryAdvisor needs the ChatMemory and the userId as the conversationId.
 > Restart the application
@@ -75,6 +75,10 @@ protected Conversation convertChatMemoryToConversation(ChatMemory chatMemory, St
 }
 ```
 
+```text
+> Convert the complete memory to messages in the conversation.
+- Check the return value in the doInvoke method of the TalksAgent.
+```
 
 ## Create a multi-agent setup
 
@@ -86,7 +90,7 @@ Use the TalksAgent as the bases for the SciFiAgent. The SciFiAgent does not need
 > Switch the active profile to 'springai-multi' in the application.yml file
 > Create the memory bean in the configuration class SpringAiMultiAgentConfig.
 > Add the memory bean to the constructor of the TalksAgent. (if not done in the previous assignment)
-> Create the SciFiAgent class, extending ActionAgent.
+> Complete the SciFiAgent class.
 > Add the SciFiAgent to the configuration in SpringAiMultiAgentConfig and add the SciFiAgent to the Agentregistry.
 > Restart the application
 > Ask questions for both agents. Check the logs to see if the router agent routes the question to the correct agent.
