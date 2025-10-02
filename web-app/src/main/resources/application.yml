@@ -5,10 +5,10 @@ spring:
     name: agent-workshop-assignments
 
 
-openai:
-  proxy:
-    url:
-    token:
+#openai:
+#  proxy:
+#    url: https://vfjv12h3xb.execute-api.eu-west-1.amazonaws.com
+#    token:
 
 logging:
   level:

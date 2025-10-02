@@ -3,7 +3,7 @@
 Start your journey with the next steps to test the built of the application and a dummy agent.
 
 ```
-> Start the application, open the chat page, and send a message.
+> Start the web-app application, open the chat page on http://localhost:8080, and send a message.
 > You should receive a dummy response.
 > In case of problems, go back to step_0
 ```
