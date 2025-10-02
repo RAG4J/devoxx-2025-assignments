@@ -3,6 +3,10 @@ package org.rag4j.agent;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import org.rag4j.agent.core.ConferenceTalksRepository;
+import org.rag4j.agent.memory.Memory;
+import org.rag4j.agent.memory.WindowedConversationMemory;
+import org.rag4j.agent.tools.FindTalksBySpeaker;
+import org.rag4j.agent.tools.FindTalksByTitle;
 import org.rag4j.agent.tools.Tool;
 import org.rag4j.agent.tools.ToolRegistry;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,11 +27,18 @@ public class PlainAgentConfigCommon {
 
     @Bean(name = "toolRegistry")
     public ToolRegistry toolRegistry(ConferenceTalksRepository conferenceTalksRepository) {
-        List<Tool> tools = List.of();
+        List<Tool> tools = List.of(
+                new FindTalksBySpeaker(conferenceTalksRepository),
+                new FindTalksByTitle(conferenceTalksRepository)
+        );
 
         return new ToolRegistry(tools);
     }
 
+    @Bean
+    public Memory memory() {
+        return new WindowedConversationMemory(10);
+    }
 
     @Bean
     public OpenAIClient openAIOkHttpClient(PlainAgentOpenAIProperties props) {
