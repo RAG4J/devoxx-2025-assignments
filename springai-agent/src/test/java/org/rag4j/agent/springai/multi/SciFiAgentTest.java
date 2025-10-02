@@ -21,7 +21,7 @@ class SciFiAgentTest {
     void setUp() {
         chatClient = mock(ChatClient.class, RETURNS_DEEP_STUBS);
         chatMemory = mock(ChatMemory.class);
-        sciFiAgent = new SciFiAgent(chatClient);
+        sciFiAgent = new SciFiAgent(chatClient, chatMemory);
     }
 
     @Test
