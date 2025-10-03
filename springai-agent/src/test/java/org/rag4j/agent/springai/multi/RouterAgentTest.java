@@ -22,7 +22,7 @@ class RouterAgentTest {
         RouterAgent.RoutingResponse routingResponse = new RouterAgent.RoutingResponse("No agent matches", "UNKNOWN");
         when(chatClient.prompt().system(anyString()).user(anyString()).call().entity(RouterAgent.RoutingResponse.class)).thenReturn(routingResponse);
         AgentRegistry agentRegistry = mock(AgentRegistry.class);
-        when(agentRegistry.getAvailableAgents()).thenReturn(Set.of("TalksAgent", "SciFiAgent"));
+        when(agentRegistry.getAvailableAgents(anyString())).thenReturn(Set.of("TalksAgent", "SciFiAgent"));
 
         // When
         RouterAgent agent = new RouterAgent(chatClient, agentRegistry);
@@ -47,7 +47,7 @@ class RouterAgentTest {
         AgentRegistry agentRegistry = mock(AgentRegistry.class);
         SciFiAgent sciFiAgent = mock(SciFiAgent.class);
         Conversation conversation = mock(Conversation.class);
-        when(agentRegistry.getAvailableAgents()).thenReturn(Set.of("TalksAgent", "SciFiAgent"));
+        when(agentRegistry.getAvailableAgents(anyString())).thenReturn(Set.of("TalksAgent", "SciFiAgent"));
         when(agentRegistry.getAgent("SciFiAgent")).thenReturn(sciFiAgent);
         when(sciFiAgent.invoke(anyString(), any(Conversation.Message.class))).thenReturn(conversation);
 

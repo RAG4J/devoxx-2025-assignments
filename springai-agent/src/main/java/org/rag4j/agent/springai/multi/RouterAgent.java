@@ -2,6 +2,7 @@ package org.rag4j.agent.springai.multi;
 
 import org.rag4j.agent.core.Agent;
 import org.rag4j.agent.core.Conversation;
+import org.rag4j.agent.springai.advisor.PromptInjectionGuardAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -27,9 +28,10 @@ public record RouterAgent(ChatClient chatClient, AgentRegistry agentRegistry) im
                     "reasoning": "Brief explanation of why this question should be routed to a specific agent.",
                     "selection": "The chosen agent"
                 \\}
-                """, agentRegistry.getAvailableAgents());
+                """, agentRegistry.getAvailableAgents(userId));
 
         RoutingResponse routingResponse = this.chatClient.prompt()
+                .advisors(new PromptInjectionGuardAdvisor())
                 .system(selectorPrompt)
                 .user(userMessage.content())
                 .call()
