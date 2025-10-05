@@ -18,12 +18,10 @@ You learned that we should design guardrails policy-first, so we’ll define thr
   > If the username doesn't comply to either, don't route the request.
 ```
 
-These samples work with the Spring profile springai-multi
-
 # IP Restrictions
 Let's start with the first rule: IP Restriction (simple mimic). Our company and therefore our system needs to comply to different IP restrictions. Disney has declined a license to spread information about Star Wars, so our application is not allowed to answer questions about this topic.
 
-In Step 2 (Spring AI), you've been introduced to Advisors. We're also going to leverage that in this exercise. To keep this exercise simple, we're going to use the SafeGuardAdvisor from Spring AI. The SafeGuardAdvisor is an easy way to block responses containing specific terms. 
+In Step 2 (Spring AI), you've been introduced to Advisors. We're also going to leverage that in this exercise. To keep this exercise simple, we're going to use the SafeGuardAdvisor from Spring AI. The SafeGuardAdvisor is an easy way to block responses containing specific terms.
 Depending on the Advisor implementation, it can work for both the request and the response of the LLM, so even if your questions don't specifically mention blocked terms, but the answer of the LLM does contain them, the response can still be blocked.
 
 Since the SafeGuardAdvisor is a very simple implementation, it wil only block the input. But depending on how you order the Advisors, the input could be enriched by the chat history if the SafeGuardAdvisor comes after the MessageChatMemoryAdvisor for example.
@@ -46,12 +44,14 @@ Since the SafeGuardAdvisor is a very simple implementation, it wil only block th
 Now on to the second rule: Prompt injection protection. We don't want users to try to override the system prompt and possibly get access to sensitive systems or information.
 With the way Spring AI framework works, some forms of prompt injection is already prevented. But we want to take extra safety measures.
 
-In this exercise we take Advisors to the next level by implementing our own Advisor. With this Advisor we want to check the user input on common prompt injection patterns.
+In this exercise we take Advisors to the next step by implementing our own Advisor. With this Advisor we want to check the user input on common prompt injection patterns.
 
 Here are two sample patterns:
 ```java
-Pattern.compile("(?i).*ignore\\s+(all|previous|above).*instructions.*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-Pattern.compile("(?i).*forget\\s+(everything|all|previous).*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+var riskyPatterns = List.of(
+    Pattern.compile("(?i).*ignore\\s+(all|previous|above).*instructions.*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE),
+    Pattern.compile("(?i).*forget\\s+(everything|all|previous).*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE)
+);
 ```
 
 Now onto the actual exercises:
@@ -60,9 +60,10 @@ Now onto the actual exercises:
 > Override the required methods [adviseCall(), getOrder(), getName()] methods from the CallAdvisor interface.
 > Implement the adviseCall() method:
  - Check if the UserMessage from the ChatClientRequest contains any prompt injection patterns.
- - If it matches a pattern, return a new ChatClientResponse with a message that you've blocked the request.
+ - Tip: request.prompt().getUserMessage().getText() gets you the user message as a String.
+ - Loop through your patterns and on a match, return a new ChatClientResponse with a message that you've blocked the request.
  - If you return a new ChatClientResponse, make sure the message is in JSON format that complies to the RoutingResponse class.
- - Tip: return a RoutingResponse JSON object with selection value "BLOCKED".
+ - Tip: wrap an AssistantMessage around a RoutingResponse JSON object with selection value "BLOCKED" and add it to the new response (example below if you don't know how).
 > In the RouterAgent, add this new PromptInjectionGuardAdvisor to the Advisors of the chatClient.
 > Alter the if statement in the RouterAgent that checks the selection property and make sure it returns a blocked message instead of routing to any agent when needed.
 > Restart the application.
@@ -105,6 +106,19 @@ public class PromptInjectionGuardAdvisor implements CallAdvisor {
     }
 
 }
+```
+
+Some more examples to help: AssistantMessage with RoutingResponse JSON and how to create a ChatResponse for the ChatClientResponse.
+```java
+var assistant = new AssistantMessage("""
+        {
+            "reasoning": "I can’t comply with instructions that try to override system rules.",
+            "selection": "BLOCKED"
+        }
+        """);
+
+// The ChatClientResponse needs a ChatResponse which you can build like this:
+var response = new ChatResponse(List.of(new Generation(assistant)));
 ```
 
 # Agent Routing Restriction
