@@ -1,14 +1,26 @@
 spring:
   profiles:
-    active: default
+    active: embabel
   application:
     name: agent-workshop-assignments
+  ai:
+    mcp:
+      client:
+        enabled: true
+        type: SYNC
+        stdio:
+          connections:
+            location:
+              command: java
+              args:
+                - -Dspring.ai.mcp.server.stdio=true
+                - -jar
+                - "${FAVOURITES_MCP_JAR:${user.dir}/favourites-mcp/target/favourites-mcp-0.0.1-SNAPSHOT.jar}"
 
-
-#openai:
-#  proxy:
-#    url: https://vfjv12h3xb.execute-api.eu-west-1.amazonaws.com
-#    token:
+openai:
+  proxy:
+    url: https://vfjv12h3xb.execute-api.eu-west-1.amazonaws.com
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoic3R1ZGVudCIsImRlc2NyaXB0aW9uIjoid29ya3Nob3AiLCJpYXQiOjE3NTk2Njk2MDQsImV4cCI6MTc1OTY4MDQwNH0.jZeIliGmAgR2ulzHALHRBcYLIpSMdsC7XlVB_edzxog
 
 logging:
   level:
