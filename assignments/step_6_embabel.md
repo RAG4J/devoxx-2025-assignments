@@ -12,7 +12,7 @@ Lets configure the application to use Embabel and run the Conference talks agent
 > ./mvnw clean install
 ```
 
-Embabel requires environment variables to configure the connection to OpenAI. You can set these in your terminal or in your IDE run configuration.
+Embabel requires environment variables to configure the connection to OpenAI. You can set these in your terminal or in your IDE run configuration. Beware, the url needs to be the url of your proxy, but append `/openai` to the url. If you use your own OpenAI account, you can omit the base url.
 
 ```bash
 export OPENAI_API_KEY=your_api_key_here
@@ -70,7 +70,7 @@ spring:
               args:
                 - -Dspring.ai.mcp.server.stdio=true
                 - -jar
-                - "${FAVOURITES_MCP_JAR:${user.dir}/favourites-mcp/target/favourites-mcp-1.0.0-SNAPSHOT.jar}"
+                - "${FAVOURITES_MCP_JAR:${user.dir}/favourites-mcp/target/favourites-mcp-0.0.1-SNAPSHOT.jar}"
 ```
 
 Embabel has a mechanism called ToolGroups. A ToolGroup is a collection of tools that can be used together. The idea is that you can ask for a ToolGroup with the role favourites and the agent will use the tools in that group to answer the question. If you provide a new mcp server for favourites, you do not need to change the agent. Through the ToolGroup you can also limit the methods that are exposed.
@@ -80,7 +80,7 @@ Embabel has a mechanism called ToolGroups. A ToolGroup is a collection of tools 
 - The `Action` annotation has a parameter `toolGroups` that you can use to provide the toolgroup. The value is the role of the toolgroup.
 > Restart the application and ask a question about marking a talk as favourite.
 - You can ask questions like:
-  - "Could you mark talk all talks about Embabel as my favourite?"
+  - "Could you mark talk all talks about embabel as my favourite?"
 > Check if the favourite is stored in the `favourites.json` file.
 - What is the userId that is used to store the favourites?
 ```
