@@ -88,7 +88,7 @@ spring:
               sse-endpoint: /sse
 ```
 
-We also need to configure the agent to use OAuth. Therefore, the springai-agent needs to replace the normal mcp client dependency with the webflux dependency. Change the dependencies in the web-app/pom.xml:
+We also need to configure the agent to use OAuth. Therefore, the springai-agent needs to replace the normal mcp client dependency with the webflux dependency. Remove the dependency  `spring-ai-starter-mcp-client`. Add the dependencies in the web-app/pom.xml:
 
 ```xml
 <dependency>
@@ -102,7 +102,7 @@ We also need to configure the agent to use OAuth. Therefore, the springai-agent 
 </dependency>
 ```
 
-Add the security config class to the project
+Add the security config class to the project of the springai-agent in the mcp package. This is a custom configuration that will create the webflux mcp transports with OAuth support.
 
 ```java
 @Configuration
@@ -159,7 +159,7 @@ public class McpSecurityConfig {
 
 ```
 
-Now add the config so autoconfiguration is disable for webflux
+Now add the config so autoconfiguration is disable for webflux, do this is the application.yml of the web-app:
 ```yaml
 spring:
   autoconfigure:
@@ -167,7 +167,7 @@ spring:
       - org.springframework.ai.mcp.client.autoconfigure.SseWebFluxTransportAutoConfiguration
 ```
 
-Now, add the last missing config to the application.yml to configure OAuth client:
+Now, add the last missing config to the application.yml of the web-app to configure OAuth client:
 
 ```yaml
 spring:
