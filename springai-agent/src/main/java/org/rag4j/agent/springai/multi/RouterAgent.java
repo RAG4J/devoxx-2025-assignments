@@ -40,12 +40,17 @@ public record RouterAgent(ChatClient chatClient, AgentRegistry agentRegistry) im
         logger.info("Router reasoning = {}", routingResponse.reasoning);
         logger.info("Chosen selection = {}", routingResponse.selection);
         if (routingResponse.selection == null || routingResponse.selection.isEmpty() || routingResponse.selection.equals("UNKNOWN")) {
-            String answer = "Unfortunately I am not able to answer your question. I can only answer questions about conference talks or SciFi subjects.";
+            String answer = "Unfortunately I am not able to answer your question. I can only answer questions about " +
+                    "conference talks or SciFi subjects.";
             return new Conversation(List.of(userMessage, new Conversation.Message(answer, ASSISTANT)));
+        } else if (routingResponse.selection().equals("BLOCKED")) {
+            return new Conversation(List.of(userMessage, new Conversation.Message(routingResponse.reasoning, ASSISTANT)));
+
         } else {
             return agentRegistry.getAgent(routingResponse.selection).invoke(userId, userMessage);
         }
     }
 
-    record RoutingResponse(String reasoning, String selection) {}
+    record RoutingResponse(String reasoning, String selection) {
+    }
 }
