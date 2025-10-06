@@ -30,8 +30,9 @@ Next, you are adding the tools to the TalksAgent.
 ```
 > In the TalksAgent class, add the ConferenceTalksTools bean to the constructor.
 > Inject the ConferenceTalksTools into the TalksAgent.
-> In the method `doInvoke`, add the injected conferenceTalksTools as tools.
-- The fluent interface of the chatClient has a method `tools` to add the tools.
+  - Tip: The ConferenceTalksTools is already a Spring Bean as it is configured in the configuration class SpringAIConfigCommon.
+> In the method `doInvoke`, add the injected conferenceTalksTools to the chatClient.
+  - Tip: The fluent interface of the chatClient has a method `tools` to add the tools.
 > Restart the application
 > Open the chat page and ask again, now you should get an answer with some talks.
 ```
@@ -39,7 +40,7 @@ Next, you are adding the tools to the TalksAgent.
 ## Add memory to the Spring AI Agent
 The Spring AI agent has built-in support for memory. We want the memory to work for all actions. Therefore you need to add memory to the ActionAgent. For Spring AI you need the classes `ChatMemory` and `MessageWindowChatMemory`.
 
-When adding new features to the agent, you need to provide advisors. Advisors are classes that can modify the request to the LLM. In this case, we need an advisor to add the memory to the request. The advisor you need is called `MessageChatMemoryAdvisor`.
+When adding new features to the agent, you can use advisors. Advisors are classes that can modify the request to and response from the LLM. In this case, we use an advisor to add memory to the chat client. The advisor you need is called `MessageChatMemoryAdvisor`.
 
 For the web-app to work with the different agent implementations, we have a wrapper agent interface. The interface contains the Conversation class. Spring AI does not know this class. The memory of Spring AI also uses different classes. Therefore we need to map the Conversation to the ChatMemory of Spring AI. The default implementation shows only the last user and assistant message. To see all the messages from the memory, you can create a mapper service. You can also copy our version for inspiration.
 
@@ -47,8 +48,8 @@ For the web-app to work with the different agent implementations, we have a wrap
 > Create a Bean of type ChatMemory in the configuration class SpringAIAgentConfig. A good implementation to start with is MessageWindowChatMemory.
 > In the ActionAgent class, add a constructor parameter for ChatMemory and store it in a protected field.
 > In the method doInvoke of the TalksAgent, add the MessageChatMemoryAdvisor to the advisors of the chatClient.
-- The fluent interface of the chatClient has a method `advisors` to add the advisors.
-- The MessageChatMemoryAdvisor needs the ChatMemory and the userId as the conversationId.
+  - Tip: The fluent interface of the chatClient has a method `advisors` to add the advisors.
+  - Tip: The MessageChatMemoryAdvisor needs the ChatMemory and the userId as the conversationId.
 > Restart the application
 > Ask two questions that can only be answers when the agent remembers the previous question.
 > Change the user (without restart) and ask the last question again, the agent should not remember the previous question.
@@ -77,14 +78,14 @@ protected Conversation convertChatMemoryToConversation(ChatMemory chatMemory, St
 
 ```text
 > Convert the complete memory to messages in the conversation.
-- Check the return value in the doInvoke method of the TalksAgent.
+  - Tip: Check the return value in the doInvoke method of the TalksAgent.
 ```
 
 ## Create a multi-agent setup
 
 Now that you have a working agent, it is time to create a multi-agent setup. You make the second agent that only answers questions about Science Fiction. The agent should respond with "I don't know" if the question is not about Science Fiction.
 
-Use the TalksAgent as the bases for the SciFiAgent. The SciFiAgent does not need tools, but it does need memory. You can write the prompt yourself, or use the prompt below.
+Use the TalksAgent as the basis for the SciFiAgent. The SciFiAgent does not need tools, but it does need memory. You can write the prompt yourself, or use the prompt below.
 
 ```
 > Switch the active profile to 'springai-multi' in the application.yml file

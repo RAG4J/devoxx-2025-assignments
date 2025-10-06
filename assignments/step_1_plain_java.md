@@ -49,9 +49,10 @@ The agent uses a ToolsRegistry object to find the tools it can use. The ToolsReg
 
 ```
 > Find the bean definition for the ToolsRegistry in the file PlainAgentConfigCommon.java
-> Add the FindTalksByTitle and the FindTalksBySpeaker to the ToolsRegistry
+> Add new instances of the classes FindTalksByTitle and FindTalksBySpeaker to the ToolsRegistry
+  - Tip: The constructors of these classes need a ConferenceTalksRepository.
 > Restart the application
-> Open the chat page and ask again, now you should get an answer with some talks.
+> Open the chat page and ask the same question again, now you should get an answer with some talks.
 ```
 
 Now try this
@@ -67,13 +68,14 @@ To help the Agent create a better context for the LLM, we can add memory. The me
 
 ```
 > Add a Memory bean to the configuration in the file PlainAgentConfigCommon.java
-- The windowedConversationMemory implementation is a good start
-> Provide the Memory bean to the PlainJavaAgent, and fix compile errors
-- Tip: There is a PlainMultiAgent class and some unit tests that need to be fixed as well.
+  - Tip: The windowedConversationMemory class is a good start
+> Provide the Memory bean to the PlainJavaAgent class, and fix compile errors
+  - Tip: The class PlainJavaAgent is used to create a bean in the PlainAgentConfig.java file
+  - Tip: There is a PlainMultiAgent class and some unit tests that need to be fixed as well.
 > Add the question and the answer to the memory in the PlainJavaAgent class.
 > In some situations, you might want to add Tool outputs to the memory as well.
-- Add the Tool outputs to the memory in the PlainJavaAgent class (executeAction method).
-- Note the If statement that prevents Observations from being added to the memory.
+> Add the Tool outputs to the memory in the PlainJavaAgent class (executeAction method).
+  - Tip: Note the If statement that prevents Observations from being added to the memory.
 > Restart the application if needed, ask the same questions from the previous assignment again.
 > Check the logs to see if the memory is used in the prompt sent to OpenAI.
 ```
