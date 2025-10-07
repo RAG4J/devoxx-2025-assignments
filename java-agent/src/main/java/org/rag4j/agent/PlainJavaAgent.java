@@ -32,7 +32,7 @@ public record PlainJavaAgent(Reasoning reasoning, int maxReasoningSteps, ToolReg
     @Override
     public Conversation invoke(String userId, Conversation.Message message) {
 
-        Conversation conversation = new Conversation(new ArrayList<>());
+        Conversation conversation = memory.retrieveConversation(userId);
         Conversation.Message answerMessage = this.callReasoning(message, conversation, 1);
 
         conversation.messages().add(answerMessage);
